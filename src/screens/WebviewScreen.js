@@ -1,24 +1,34 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import WebView from 'react-native-webview';
-import Splash from './Splash';
+import AnimatedSplash from 'react-native-animated-splash-screen';
 
 const WebviewScreen = () => {
-  const [loading, setLoading] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const hideSplashScreen = () => {
-    setLoading(false);
-  };
+  useEffect(() => {
+    const splashTimer = setTimeout(() => {
+      setIsLoaded(true);
+    }, 3000);
+
+    return () => clearTimeout(splashTimer);
+  }, []);
 
   return (
-    <View style={styles.container}>
-      {loading && <Splash />}
-      <WebView
-        source={{uri: 'http://64.227.162.41/'}}
-        style={{flex: 1}}
-        onLoadEnd={hideSplashScreen}
-      />
-    </View>
+    <AnimatedSplash
+      translucent={true}
+      isLoaded={isLoaded}
+      logoImage={require('../assets/rupio.png')}
+      backgroundColor={'#ffffff'}
+      logoHeight={150}
+      logoWidth={150}>
+      <View style={styles.container}>
+        <WebView
+          source={{uri: 'https://admin.rupioo.com/'}}
+          style={{flex: 1}}
+        />
+      </View>
+    </AnimatedSplash>
   );
 };
 
